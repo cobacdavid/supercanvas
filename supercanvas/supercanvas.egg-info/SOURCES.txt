@@ -1,0 +1,8 @@
+README.md
+setup.py
+supercanvas/__init__.py
+supercanvas/supercanvas.py
+supercanvas.egg-info/PKG-INFO
+supercanvas.egg-info/SOURCES.txt
+supercanvas.egg-info/dependency_links.txt
+supercanvas.egg-info/top_level.txt
