@@ -3,8 +3,25 @@ from .supercanvas import *
 
 if __name__ == '__main__':
 
-    example = 14
+    example = 15
     
+    ######################################################
+    ######################################################
+    ######################################################
+    #######  EXAMPLE 0
+    ######################################################
+    ######################################################
+    ######################################################
+    if example==0:
+        r = tkinter.Tk()
+        c = supercanvas(r, bg="white", width=500, height=500,
+                        axes=True,
+                        ticks=True,
+                        follow=True)
+        c.pack(expand=True)
+        r.bind("<q>", quit)
+
+        tkinter.mainloop()
     ######################################################
     ######################################################
     ######################################################
@@ -12,7 +29,7 @@ if __name__ == '__main__':
     ######################################################
     ######################################################
     ######################################################
-    if example==1:
+    elif example==1:
         import math
         r = tkinter.Tk()
         c = supercanvas(r, bg="white", width=800, height=600,
@@ -20,6 +37,7 @@ if __name__ == '__main__':
                         ticks=True,
                         follow=True)
 
+        c.itemconfigure("ylabel", fill="red")
         c.setUnit(100, 100)
         c.setTicks(1, .5)
         #c.setOrigin(100,100)
@@ -45,6 +63,7 @@ if __name__ == '__main__':
         c.step = .01
         c.drawFunction(h, -math.pi, math.pi, fill="#ff00ff", width=1)
 
+        c.itemconfigure("ticks", fill="red")
 
         c.pack(expand=True)
         # force un refresh
@@ -165,7 +184,7 @@ if __name__ == '__main__':
 
         dim = 800
         
-        c = supercanvas(w, bg="white", width=dim, height=dim, axes=False, ticks=False)
+        c = supercanvas(w, bg="white", width=dim, height=dim, axes=False, ticks=False, grid=False,zero=False,xlabel=False,ylabel=False)
         c.pack(expand=True)
         c.update()
         c.setUnit(dim/2 - 2, dim/2 - 2)
@@ -204,7 +223,9 @@ if __name__ == '__main__':
         offset = 25
         #
         c = supercanvas(w, bg="white", width=dim, height=dim,
-                        axes=False, ticks=False)
+                        axes=False, ticks=False,
+                        grid=False, xlabel=False,
+                        ylabel=False, zero=False)
         c.pack(expand=True)
         c.setUnit(dim/2 - offset, dim/2 - offset)
 
@@ -251,13 +272,13 @@ if __name__ == '__main__':
         # offset: mid-with of the linewidth
         offset = 25
         #
-        c = supercanvas(w, bg="white", width=dim, height=dim,
-                        axes=False, ticks=False)
+        c = supercanvas(w, bg="black", width=dim, height=dim,
+                        axes=False, ticks=False,
+                        grid=False, xlabel=False,
+                        ylabel=False)
         c.pack(expand=True)
         c.setUnit(dim/2 - offset, dim/2 - offset)
         # 
-        # set canvas background to black
-        c.create_rectangle(0, 0, dim, dim, fill="black")
         #
         # steps between entry values
         c.step = .005
@@ -304,14 +325,13 @@ if __name__ == '__main__':
         # offset: mid-with of the linewidth
         offset = 25
         #
-        c = supercanvas(w, bg="white", width=dim, height=dim,
-                        axes=False, ticks=False)
+        c = supercanvas(w, bg="black", width=dim, height=dim,
+                        axes=False, ticks=False,
+                        grid=False, xlabel=False, ylabel=False)
         c.pack(expand=True)
         c.setUnit(dim/3 - offset, dim/3 - offset)
         # 
-        # set canvas background to black
-        c.create_rectangle(-5, -5, dim+5, dim+5, fill="black")
-        #
+
         # steps between entry values
         c.step = .01
         
@@ -381,8 +401,9 @@ if __name__ == '__main__':
         # canvas dimension
         dim = 600
         #
-        c = supercanvas(w, bg="white", width=dim, height=dim,
-                        axes=False, ticks=False)
+        c = supercanvas(w, bg="black", width=dim, height=dim,
+                        axes=False, ticks=False, zero=False,
+                        grid=False, xlabel=False, ylabel=False)
         c.pack(expand=True)
         c.setUnit(.95*dim, .95*dim)
         c.setOrigin(.025*dim, .975*dim)
@@ -392,8 +413,6 @@ if __name__ == '__main__':
         #
         # steps between entry values
         c.step = .01
-   # set canvas background to black
-        c.create_rectangle(-5, -5, dim+5, dim+5, fill="black")
         pas = .05
         a, b = 0, 5
         puissance = a
@@ -483,7 +502,7 @@ if __name__ == '__main__':
             a += -.1
             b += .1
             c.after(10)
-            c.export()
+            # c.export()
             c.setViewX(a, b)
             c.update()
 
@@ -491,7 +510,7 @@ if __name__ == '__main__':
             a += .5
             b += .5
             c.after(10)
-            c.export()
+            # c.export()
             c.setViewX(a, b)
             c.update()
 
@@ -511,7 +530,8 @@ if __name__ == '__main__':
         from opensimplex import OpenSimplex
         w = beginMagicTk()
         c = supercanvas(w, bg="white", width=600, height=600,
-                        axes=False, ticks=False)
+                        axes=False, ticks=False, zero=False,
+                        grid=False, xlabel=False, ylabel=False)
 
         #c.create_rectangle(-10, -10, 700, 700, fill="darkred")
         c.update()
@@ -557,8 +577,8 @@ if __name__ == '__main__':
             c.update()
             # c.export()
             c.after(100)
-            for element in listeId[j]:
-                c.delete(element)
+            #for element in listeId[j]:
+                #c.delete(element)
 
         endMagicTk(w)
 
@@ -575,17 +595,17 @@ if __name__ == '__main__':
         dim = 600
         c = supercanvas(w, bg="white", width=dim, height=dim,
                         axes=True,
-                        ticks=True,
-                        tticks=False,
+                        ticks=True, zero=False,
+                        xlabel=True, ylabel=False,
                         grid=True)
         c.setUnit(100, 100)
         c.itemconfigure("axes", fill="red", width=1)
-        c.itemconfigure("grid", fill="darkblue", dash=(5, 2, 1, 2))
+        c.itemconfigure("grid", fill="blue", dash=(5, 2, 1, 2))
         c.itemconfigure("ticks", fill="blue", width=5)
         c.step=.1
         c.drawFunction(lambda x:.5 * x**2, -5, 5,
                        fill="darkgreen", dash=(5, 2), width=4)
-
+        c.update()
         endMagicTk(w)
     ######################################################
     ######################################################
@@ -601,7 +621,7 @@ if __name__ == '__main__':
         c = supercanvas(w, bg="white", width=dim, height=dim,
                         axes=True,
                         ticks=True,
-                        tticks=False,
+                        xlabel=False, ylabel=False,
                         grid=False)
         I = (-.1, 1.1)
         c.setViewX(*I)
@@ -630,7 +650,7 @@ if __name__ == '__main__':
         c = supercanvas(w, bg="black", width=dim, height=dim,
                         axes=False,
                         ticks=False,
-                        tticks=False,
+                        xlabel=False, ylabel=False,
                         grid=False,
                         zero=False)
         taille = 10
@@ -664,7 +684,7 @@ if __name__ == '__main__':
                                     fill=couleur, width=dim / (2 * taille), outline=couleur)]
             c.update()
             c.after(50)
-            c.export()
+            # c.export()
         #print(min(listeN), max(listeN))
 
         endMagicTk(w)
@@ -688,13 +708,13 @@ if __name__ == '__main__':
         c = supercanvas(w, bg="white", width=dim, height=dim,
                         axes=False,
                         ticks=False,
-                        tticks=False,
+                        xlabel=False, ylabel=False,
                         grid=False,
                         zero=False)
         #print(font.families())
         #quit()
 
-        taille = 75
+        taille = 60
         I = (0, taille)
         c.setViewX(*I)
         c.setViewY(*I)
@@ -713,24 +733,85 @@ if __name__ == '__main__':
                 c.delete(id)
             tabPoints = []
             var =  functionVar(f)
-            coef = .04
+            coef = .09
             for i in range(taille + 1):
                 for j in range(taille + 1):
                     n = pnoise3(coef * i, coef * j, 1 * var)
                     # listeN += [n]
-                    couleur = hsv_to_rgb((n + 1) / 6, 1, 1)
+                    couleur = hsv_to_rgb((n + 1) / 3, 1, 1)
                     # tabPoints += [c.drawPoint(i, j,
                     #                fill=couleur, width=dim / (2 * taille), outline=couleur)]
                     #n = (48 + ((n + 1) / 2) * 10)
                     #char = chr(int(n))
-                    n = int(len(tabChar) * ((n + 1) / 2)) 
+                    n = max(min(int(len(tabChar) * ((n + 1) / 2)) ,13),0)
                     x, y = c.__coordsCal2Can__(i, j)
                     tabPoints += [c.create_text(x, y,
                             text=tabChar[n],
                             fill=couleur,
                             font=mafont,
-                            width=dim / (2 * taille))]
+                            width=dim / (1.5 * taille))]
             c.update()
             c.after(10)
             # c.export()
+        endMagicTk(w)
+
+    ######################################################
+    ######################################################
+    ######################################################
+    #######  EXAMPLE 17
+    ######################################################
+    ######################################################
+    ######################################################
+
+    elif example == 17:
+        import random, math
+        import noise
+        from tkinter import font
+        
+        w = beginMagicTk()
+        dim = 800
+        c = supercanvas(w, bg="white", width=dim, height=dim,
+                        axes=False,
+                        ticks=False,
+                        xlabel=False, ylabel=False,
+                        grid=False,
+                        zero=False)
+        I=(-1, 50)
+        c.setViewX(*I)
+        c.setViewY(*I)
+        c.pack(expand=True)
+
+        c.update()
+        
+        frames = 500
+        
+        r = range(50)
+        s = range(50)
+        t = list(range(9))
+        u = t * 2500
+        random.shuffle(u)
+        
+        tabId = []
+        for f in range(frames):
+            for o in tabId:
+                c.delete(o)
+            tabId = []
+            k = 0
+            coef = .07
+            for i in r:
+                for j in s:
+                    n = noise.snoise3(coef * i, coef * j,
+                                math.cos(2 * math.pi * f / frames))
+                    n= (n + 1) / 2
+                    couleur = hsv_to_rgb(n+.7, 1, 1)
+                    x, y = c.__coordsCal2Can__(i, j)
+                    #ide = c.create_text(x, y, text=str(u[k]), fill=couleur)
+                    ide = c.drawLine([i, j, i+1, j+1],  fill=couleur)
+                    tabId += [ide]
+                    u[k] = (u[k] + 1) % len(t)
+                    k += 1
+            c.update()
+            c.after(100)
+
+        
         endMagicTk(w)

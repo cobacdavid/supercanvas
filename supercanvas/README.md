@@ -7,6 +7,9 @@ behaviour. So options of items created are usual options and items
 created return id (as a number) of the object so that you can
 `itemconfigure` it.
 
+Note: `tticks` tag is no more used, replaced by `xlabel` and
+`ylabel` tags.
+
 
 # Full commands list
 
@@ -23,7 +26,7 @@ supercanvas(rootname, **options)
 ```
 
 `options` could be ususal `tkinter` options and boolean variables:
-`axes`, `ticks`, `tticks`, `grid`, `zero` and `follow`.
+`axes`, `ticks`, `xlabel`, `ylabel` `grid`, `zero` and `follow`.
 
 These variables dis/enable features of `supercanvas`.
 
@@ -56,7 +59,8 @@ These variables dis/enable features of `supercanvas`.
 
 .axes   # boolean
 .ticks  # boolean
-.tticks # boolean
+.xlabel # boolean
+.ylabel # boolean
 .grid   # boolean
 .zero   # boolean
 
@@ -72,16 +76,6 @@ These variables dis/enable features of `supercanvas`.
 
 .export()       # save supercanvas in an eps file whose name is timestamped
 
-# it's better nor to use these methods
-# but use booleans to dis/enable
-# or tags attached to each of these objects
-# to configure them (see further in this doc)
-.drawAxes(**options)
-.drawTicks(**options)
-.drawTTicks(**options)
-.drawGrid(**options)
-.drawZero(**options)
-
 .drawPoint(x, y, **options)
 .drawLine(list, **options)        # flat-list or list of tuples
 .drawFunction(function, a, b, **options)
@@ -90,8 +84,8 @@ These variables dis/enable features of `supercanvas`.
 
 ```
 
-`supercanvas` tags to identify objects: `axes`, `ticks`, `tticks`,
-`grid` and `zero`.
+`supercanvas` tags to identify objects: `axes`, `ticks`, `xlabel`,
+`ylabel` `grid` and `zero`.
 
 These tags enable you to configure objects tagged with the usual way:
 
@@ -174,8 +168,8 @@ c.setViewY(-1.05, 3.1)
 
 By default, axes, ticks, tticks, grid ans zero are shown/drawn. If
 you want them not to appear, you pass options `axes`, `ticks`,
-`tticks`, `grid` and `zero` to `False` in the `supercanvas`
-command.
+`xlabel`, `ylabel`, `grid` and `zero` to `False` in the
+`supercanvas` command.
 
 Or you can these variables to `False` into your script. 
 
@@ -193,7 +187,7 @@ c.setTicks(1, .5)
 
 ### supercanvas items
 
-`supercanvas` provides four drawing methods `drawPoint`, `drawLine`, `drawFunction` and `drawParam`.
+`supercanvas` provides four drawing methods `drawPoint`, `drawLine`, `drawFunction`, `drawParam` and `drawSeq`.
 
 
 * `drawPoint` method creates a point at the desired coords.
@@ -296,6 +290,10 @@ x-axis.
 You can move the whole `supercanvas` content in grabing /
 releasing the background. It will refresh coords.
 
+### zooming
+
+You can zoom the whole `supercanvas` content with mousewheel.
+
 ### `supercanvas` options
 
 * `axes`
@@ -307,9 +305,10 @@ is `True`. For the moment, you cannot change axes style...
 
 passing `ticks=False` to `supercanvas` options disable ticks, default is `True`.
 
-* `tticks`
+* `xlabel` and `ylabel`
 
-passing `tticks=False` to `supercanvas` options disable text ticks, default is `True`.
+passing `xlabel=False` to `supercanvas` options disable text labels
+on x-axis, default is `True`. Same thing for `ylabel`
 
 * `grid`
 
@@ -350,7 +349,8 @@ It creates you png files with the same names. Then with [convert command of Imag
 
 
 Note: It's better to pass `-width` and `-height` options to this
-conversion command to respect initial size.
+conversion command to respect initial size. Sometimes you will need also
+to adapt antialiasing with `-antialias` option (1, 2, 4 or 8).
 
 
 ``` bash
@@ -526,7 +526,8 @@ dim = 600
 c = supercanvas(w, bg="white", width=dim, height=dim,
                 axes=True,
                 ticks=True,
-                tticks=False,
+                xlabel=False,
+                ylabel=False,
                 grid=True)
 c.setUnit(100, 100)
 c.itemconfigure("axes", fill="red", width=1)
