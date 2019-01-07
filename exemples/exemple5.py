@@ -1,28 +1,45 @@
 from supercanvas import *
 
+import math
+
 w = beginMagicTk()
 
 dim = 600
-c = supercanvas(w, bg="white",
+c = supercanvas(w, bg="black",
                 width=dim,
-                height=dim,
-                grid=False,
-                zero=False)
+                height=dim)
 
-c.setOrigin(100, 300)
-c.setUnit(200, 200)
 
-x = lambda t: 2 * (1 - t ** 2) / (1 + t ** 2) ** 2
-y = lambda t: 4 * t / (1 + t ** 2) ** 2
+c.setUnit(150, 150)
+c.setOrigin(300, 300)
+c.setTicks(.5, .5)
 
-p = .05
-a, b = -10, 10
+c.itemconfigure("repere", fill="white")
+c.itemconfigure("axes", fill="white")
+
+c.pack(expand=True)
+
+x = lambda t: t
+y = lambda t: t ** 3
+
+p = .001
+r = 1.25
+
+a, b = -r, r
 maxi = int(1 + (b - a) / p)
 
 t = a
 for i in range(maxi):
     X, Y = x(t), y(t)
-    c.drawLine([(0, 0), (X, Y)], fill="darkred", width=3)
+    if X > 0:
+        c.drawLine([(X, X), (X, Y)], fill="red", width=1)
+    else:
+        c.drawLine([(X, -X), (X, Y)], fill="red", width=1)
+
     t += p
+
+c.update()
+
+w.bind("<e>", c.export)
 
 endMagicTk(w)

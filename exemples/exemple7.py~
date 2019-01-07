@@ -1,0 +1,11 @@
+from supercanvas import *
+
+w = beginMagicTk()
+
+dim = 800
+c = supercanvas(w, width=dim, height=dim,
+                bg="white",
+                repere=False
+)
+
+endMagicTk(w)

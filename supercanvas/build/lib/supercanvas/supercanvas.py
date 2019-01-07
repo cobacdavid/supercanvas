@@ -55,19 +55,19 @@ class supercanvas(tkinter.Canvas):
 
     #### zone de réflexion sur le futur repère
     
-    gridDefault = {'activedash': '', 'activefill': '', 'activestipple': '', 'activewidth': '0.0', 'arrow': 'none', 'arrowshape': '8 10 3', 'capstyle': 'butt', 'fill': 'black', 'dash': (5,2), 'dashoffset': '0', 'disableddash': '', 'disabledfill': '', 'disabledstipple': '', 'disabledwidth': '0.0', 'joinstyle': 'round', 'offset': '0,0', 'smooth': '0', 'splinesteps': '12', 'state': '', 'stipple': '', 'tags': 'grid', 'width': '1.0'}
+    gridDefault = {'activedash': '', 'activefill': '', 'activestipple': '', 'activewidth': '0.0', 'arrow': 'none', 'arrowshape': '8 10 3', 'capstyle': 'butt', 'fill': 'black', 'dash': (5,2), 'dashoffset': '0', 'disableddash': '', 'disabledfill': '', 'disabledstipple': '', 'disabledwidth': '0.0', 'joinstyle': 'round', 'offset': '0,0', 'smooth': '0', 'splinesteps': '12', 'state': '', 'stipple': '', 'tags': 'grid repere', 'width': '1.0'}
 
     gridUser = gridDefault
     
-    ticksDefault = {'activedash': '', 'activefill': '', 'activestipple': '', 'activewidth': '0.0', 'arrow': 'none', 'arrowshape': '8 10 3', 'capstyle': 'butt', 'fill': 'black', 'dash': '', 'dashoffset': '0', 'disableddash': '', 'disabledfill': '', 'disabledstipple': '', 'disabledwidth': '0.0', 'joinstyle': 'round', 'offset': '0,0', 'smooth': '0', 'splinesteps': '12', 'state': '', 'stipple': '', 'tags': 'ticks', 'width': '2.0'}
+    ticksDefault = {'activedash': '', 'activefill': '', 'activestipple': '', 'activewidth': '0.0', 'arrow': 'none', 'arrowshape': '8 10 3', 'capstyle': 'butt', 'fill': 'black', 'dash': '', 'dashoffset': '0', 'disableddash': '', 'disabledfill': '', 'disabledstipple': '', 'disabledwidth': '0.0', 'joinstyle': 'round', 'offset': '0,0', 'smooth': '0', 'splinesteps': '12', 'state': '', 'stipple': '', 'tags': 'ticks repere', 'width': '2.0'}
 
     ticksUser = ticksDefault
     
-    xlabelDefault = {'activefill': '', 'activestipple': '', 'anchor': 'n', 'angle': '0.0', 'disabledfill': '', 'disabledstipple': '', 'fill': 'black', 'font': 'TkDefaultFont', 'justify': 'left', 'offset': '0,0', 'state': '', 'stipple': '', 'tags': 'xlabel', 'text': '', 'underline': '-1', 'width': '0'}
+    xlabelDefault = {'activefill': '', 'activestipple': '', 'anchor': 'ne', 'angle': '0.0', 'disabledfill': '', 'disabledstipple': '', 'fill': 'black', 'font': 'TkDefaultFont', 'justify': 'left', 'offset': '0,0', 'state': '', 'stipple': '', 'tags': 'xlabel repere', 'text': '', 'underline': '-1', 'width': '0'}
 
     xlabelUser = xlabelDefault
     
-    ylabelDefault = {'activefill': '', 'activestipple': '', 'anchor': 'ne', 'angle': '0.0', 'disabledfill': '', 'disabledstipple': '', 'fill': 'black', 'font': 'TkDefaultFont', 'justify': 'left', 'offset': '0,0', 'state': '', 'stipple': '', 'tags': 'ylabel', 'text': '', 'underline': '-1', 'width': '0'}
+    ylabelDefault = {'activefill': '', 'activestipple': '', 'anchor': 'ne', 'angle': '0.0', 'disabledfill': '', 'disabledstipple': '', 'fill': 'black', 'font': 'TkDefaultFont', 'justify': 'left', 'offset': '0,0', 'state': '', 'stipple': '', 'tags': 'ylabel repere', 'text': '', 'underline': '-1', 'width': '0'}
     
     ylabelUser = ylabelDefault
     
@@ -172,6 +172,15 @@ class supercanvas(tkinter.Canvas):
         self.y_origin = self.y_unit * y2
         self.__refresh()
 
+    def setView(self, x1, x2, y1, y2):
+        x1, x2 = min(x1, x2), max(x1, x2)
+        y1, y2 = min(y1, y2), max(y1, y2)
+        self.x_unit = self.width / (x2 - x1)
+        self.x_origin = - self.x_unit * x1
+        self.y_unit = self.height / (y2 - y1)
+        self.y_origin = self.y_unit * y2
+        self.__refresh()
+        
     def getView(self):
         x1, y2 = self.__coordsCan2Cal__(0, 0)
         x2, y1 = self.__coordsCan2Cal__(self.width, self.height)
@@ -331,10 +340,10 @@ class supercanvas(tkinter.Canvas):
     #############################################
     #############################################
 
-    def export(self):
+    def export(self, event=None):
         color = self.cget("bg")
         dimX, dimY = map(int, self.getDim())
-        offset = 1
+        offset = 10
         ide = self.create_rectangle(-offset, -offset,
                                    dimX + offset, dimY + offset,
                                    fill = color)
@@ -389,9 +398,9 @@ class supercanvas(tkinter.Canvas):
                 optionsYlabel[str(v[0])] = v[4]
                 self.ylabelUser[v[0]] = v[4]
         ##
-        for tag in ["ticks", "grid", "xlabel", "ylabel"]:
-            self.delete(tag)
-        #self.delete("repere")
+        #for tag in ["ticks", "grid", "xlabel", "ylabel"]:
+        #    self.delete(tag)
+        self.delete("repere")
         #
         dx, dy = self.getTicks()
         #
@@ -405,63 +414,80 @@ class supercanvas(tkinter.Canvas):
         if ypV != -1:
             ldY = len(str(dy))
             arrondiY = ldY - ypV - 1
+        #
         Teloignement = 1
         #
         #
         eloignement = 2
         #
+        #
         # absc. positives
-        i = 1
         o1 = self.y_origin + eloignement
         o2 = self.y_origin - eloignement
         o3 = self.y_origin + Teloignement
-        limite =  (self.width - self.x_origin) / (dx * self.x_unit)
-        while i <= limite :
-            a = self.x_origin + self.x_unit * i * dx
-            if self.ticks:
+        i = 0
+        a = self.x_origin
+        # gestion de la partie qui ne doit pas s'afficher (entre 0 et le minimum)
+        # on rend donc a > 0
+        while a <= 0:
+            a += self.x_unit * dx
+            i += 1
+        # on peut commancer à afficher avec la bonne valeur de a
+        # du coup recalcul de a à la fin, du coup limite + 1
+        while a < self.width:
+            if self.ticks and 0 < self.y_origin < self.height:
                 ide = self.create_line(a, o1, a, o2, **optionsTicks)
-                self.addtag_withtag(ide, "ticks")
-                self.addtag_withtag(ide, "repere")
+                # self.addtag_withtag(ide, "ticks")
+                 #self.addtag_withtag(ide, "repere")
             if self.grid:
                 ide = self.create_line(a, 0, a, self.height, **optionsGrid)
-                self.addtag_withtag(ide, "grid")
-                self.addtag_withtag(ide, "repere")
-            if self.xlabel:
+                # self.addtag_withtag(ide, "grid")
+                # self.addtag_withtag(ide, "repere")
+            # on n'affiche pas à l'origine -> i!=0
+            # on n'affiche pas si on ne voit pas
+            # l'axe des abscisses -> 0 < y_origin < height
+            if self.xlabel and i != 0 and 0 < self.y_origin < self.height:
                 ide = self.create_text(a, o3, **optionsXlabel)
                 self.itemconfigure(ide, text="{:>2}".format(round(dx * i, arrondiX)))
-                self.addtag_withtag(ide, "xlabel")
-                self.addtag_withtag(ide, "repere")
+                # self.addtag_withtag(ide, "xlabel")
+                # self.addtag_withtag(ide, "repere")
+            a += self.x_unit * dx
             i += 1
 
         # abs. negatives
-        i = 1
-        limite = self.x_origin /  (self.x_unit * dx)
-        while i <= limite:
-            a = self.x_origin - self.x_unit * i * dx
-            if self.ticks:
+        i = 0
+        a = self.x_origin
+        while a >= self.width:
+            a -= self.x_unit * dx
+            i += 1
+        while a > 0:
+            if self.ticks and 0 < self.y_origin < self.height:
                 ide = self.create_line(a, o1, a, o2, **optionsTicks)
-                self.addtag_withtag(ide, "ticks")
-                self.addtag_withtag(ide, "repere")
+                # self.addtag_withtag(ide, "ticks")
+                # self.addtag_withtag(ide, "repere")
             if self.grid:
                 ide = self.create_line(a, 0, a, self.height, **optionsGrid)
-                self.addtag_withtag(ide, "grid")
-                self.addtag_withtag(ide, "repere")
-            if self.xlabel:
+                # self.addtag_withtag(ide, "grid")
+                # self.addtag_withtag(ide, "repere")
+            if self.xlabel and i != 0 and  0 < self.y_origin < self.height:
                 ide = self.create_text(a, o3, **optionsXlabel)
                 self.itemconfigure(ide, text="{:>2}".format(round(- dx * i, arrondiX)))
-                self.addtag_withtag(ide, "xlabel")
-                self.addtag_withtag(ide, "repere")
+                # self.addtag_withtag(ide, "xlabel")
+                # self.addtag_withtag(ide, "repere")
+            a -= self.x_unit * dx
             i += 1
 
         # ord. positives
-        i = 1
         a1 = self.x_origin + eloignement
         a2 = self.x_origin - eloignement
         a3 = self.x_origin - Teloignement
-        limite = self.y_origin / (self.y_unit * dy)
-        while i <= limite:
-            o = self.y_origin - self.y_unit * i * dy
-            if self.ticks:
+        i = 0
+        o = self.y_origin
+        while o >= self.height:
+            i += 1
+            o -= self.y_unit * dy
+        while o > 0:
+            if self.ticks and 0 < self.x_origin < self.width:
                 ide = self.create_line(a1, o, a2, o, **optionsTicks)
                 self.addtag_withtag(ide, "ticks")
                 self.addtag_withtag(ide, "repere")
@@ -469,19 +495,22 @@ class supercanvas(tkinter.Canvas):
                 ide = self.create_line(0, o, self.width, o, **optionsGrid)
                 self.addtag_withtag(ide, "grid")
                 self.addtag_withtag(ide, "repere")
-            if self.ylabel:
+            if self.ylabel and i != 0 and 0 < self.x_origin < self.width:
                 ide = self.create_text(a3, o, **optionsYlabel)
                 self.itemconfigure(ide, text="{:>2}".format(round(dy * i, arrondiY)))
                 self.addtag_withtag(ide, "ylabel")
                 self.addtag_withtag(ide, "repere")
+            o -= self.y_unit * dy
             i += 1
 
         # ord. negatives
-        i = 1
-        limite = (self.height - self.y_origin) / (self.y_unit * dy)
-        while i <= limite:
-            o = self.y_origin + self.y_unit * i * dy
-            if self.ticks:
+        i = 0
+        o = self.y_origin
+        while o <= 0:
+            o += self.y_unit * dy
+            i += 1
+        while o < self.height:
+            if self.ticks and 0 < self.x_origin < self.width:
                 ide = self.create_line(a1, o, a2, o, **optionsTicks)
                 self.addtag_withtag(ide, "ticks")
                 self.addtag_withtag(ide, "repere")
@@ -489,15 +518,15 @@ class supercanvas(tkinter.Canvas):
                 ide = self.create_line(0, o, self.width, o, **optionsGrid)
                 self.addtag_withtag(ide, "grid")
                 self.addtag_withtag(ide, "repere")
-            if self.ylabel:
+            if self.ylabel and i != 0 and 0 < self.x_origin < self.width:
                 ide = self.create_text(a3, o, **optionsYlabel)
                 self.itemconfigure(ide, text="{:>2}".format(round(- dy * i, arrondiY)))
                 self.addtag_withtag(ide, "ylabel")
                 self.addtag_withtag(ide, "repere")
+            o += self.y_unit * dy
             i += 1
-    
-  
-    
+
+
     #############################################
     #############################################
     # AXES
@@ -577,7 +606,7 @@ class supercanvas(tkinter.Canvas):
         xcan, ycan = self.__coordsCal2Can__(x, y)
         ide = self.create_oval(xcan - epaisseur, ycan - epaisseur,
                          xcan + epaisseur, ycan + epaisseur,
-                         tags="point", **options)
+                         tags="supercanvas", **options)
         x1cal, y1cal = self.__coordsCan2Cal__(xcan - epaisseur, ycan - epaisseur)
         x2cal, y2cal = self.__coordsCan2Cal__(xcan + epaisseur, ycan + epaisseur)       
         self.coordsInit[ide] = [x1cal, y1cal, x2cal, y2cal]

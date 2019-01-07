@@ -5,7 +5,7 @@ with open('README.md') as f:
 
 setup(
     name='supercanvas',
-    version='0.6.1',
+    version='0.6.5',
     description='tkinter simplified (and augmented) canvas',
     long_description_content_type='text/markdown',
     long_description=long_description,
