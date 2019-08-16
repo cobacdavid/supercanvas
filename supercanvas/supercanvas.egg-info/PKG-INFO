@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: supercanvas
-Version: 0.6.5
+Version: 0.6.6
 Summary: tkinter simplified (and augmented) canvas
 Home-page: https://twitter.com/davidequantique
 Author: David COBAC
@@ -596,6 +596,7 @@ Description: This package provides a `supercanvas` widget based on the original
         supercanvas usage for professionnal use. You have to consider this
         package as an experiment.
         
+Keywords: tkinter,canvas,cartesian,repère
 Platform: UNKNOWN
 Requires-Python: >3.2
 Description-Content-Type: text/markdown

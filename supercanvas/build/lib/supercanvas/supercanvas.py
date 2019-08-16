@@ -2,6 +2,7 @@
 # Début 27/12/2018
 
 import tkinter
+import math # drawBoxPlot : ceil
 from tkinter import filedialog
 
 import time
@@ -344,18 +345,21 @@ class supercanvas(tkinter.Canvas):
         color = self.cget("bg")
         dimX, dimY = map(int, self.getDim())
         offset = 10
-        ide = self.create_rectangle(-offset, -offset,
+        __lefond = self.create_rectangle(-offset, -offset,
                                    dimX + offset, dimY + offset,
                                    fill = color)
-        self.lower(ide)
+        self.tag_lower(__lefond)
         #
         f = str(int(round(time.time(), 1) * 10))
         try:
             dir = "exportImages"
             if not os.path.exists(dir):
                 os.makedirs(dir)
-            self.postscript(file= dir+'/'+f+'.eps', colormode='color')
-            self.delete(ide)
+            self.postscript(file= dir+'/'+f+'.eps',
+                            colormode='color',
+                            width=self.width,
+                            height=self.height)
+            self.delete(__lefond)
             return f
         except:
             print("eps printing problem...\nhave you correct rights on the current directory?")
@@ -598,17 +602,32 @@ class supercanvas(tkinter.Canvas):
         # du coup récup de l'option width utilisée comme
         # épaisseur.
         epaisseur = 1
+        a_enlever = []
         for k, v in options.items():
-                if k == "width":
-                     epaisseur = v
-                     del(options["width"])
-                     break
+            if k == "width":
+                epaisseur = v
+                a_enlever.append(k)
+            elif k == "style":
+                style = v
+                a_enlever.append(k)
+        for k in a_enlever:
+            del(options[k])
         xcan, ycan = self.__coordsCal2Can__(x, y)
-        ide = self.create_oval(xcan - epaisseur, ycan - epaisseur,
+        if 'style' in vars():
+            if style == "oval":
+                ide = self.create_oval(xcan - epaisseur, ycan - epaisseur,
+                         xcan + epaisseur, ycan + epaisseur,
+                         tags="supercanvas", **options)
+            elif style == "rectangle":
+                ide = self.create_rectangle(xcan - epaisseur, ycan - epaisseur,
+                         xcan + epaisseur, ycan + epaisseur,
+                         tags="supercanvas", **options)
+        else:
+            ide = self.create_oval(xcan - epaisseur, ycan - epaisseur,
                          xcan + epaisseur, ycan + epaisseur,
                          tags="supercanvas", **options)
         x1cal, y1cal = self.__coordsCan2Cal__(xcan - epaisseur, ycan - epaisseur)
-        x2cal, y2cal = self.__coordsCan2Cal__(xcan + epaisseur, ycan + epaisseur)       
+        x2cal, y2cal = self.__coordsCan2Cal__(xcan + epaisseur, ycan + epaisseur)
         self.coordsInit[ide] = [x1cal, y1cal, x2cal, y2cal]
         return ide
 
@@ -671,3 +690,45 @@ class supercanvas(tkinter.Canvas):
         for i in range(1, n+1):
             line += [(seq[i-1], seq[i])] + [(seq[i], seq[i])]
         return self.drawLine(line, **options)
+
+    def drawBoxPlot(self, liste, **options):
+        liste.sort()
+        lon = len(liste)
+        mini = min(liste)
+        maxi = max(liste)
+        mediane = (liste[lon // 2] + liste[-(lon // 2) - 1]) / 2
+        moyenne = sum(liste) / lon
+        q1 = liste[math.ceil(lon / 4)]
+        q3 = liste[math.ceil(3 * lon / 4)]
+        # print(mini, q1, mediane, q3, maxi)
+        #
+        hauteur = 0
+        epaisseur = 1
+        #
+        aSupprimer = []
+        for k, v in options.items():
+            if k == "hauteur":
+                hauteur = v
+                aSupprimer.append("hauteur")
+            if k == "epaisseur":
+                epaisseur = v
+                aSupprimer.append("epaisseur")
+        for opt in aSupprimer:
+            del options[opt]
+
+        miH = (2 * hauteur + epaisseur) / 2
+        self.drawLine([(mini, hauteur),
+                       (mini, hauteur + epaisseur)], **options)
+        self.drawLine([(mini, miH), (q1, miH)], **options)
+        self.drawLine([(q1, hauteur),
+                       (q1, hauteur + epaisseur)], **options)
+        self.drawLine([(q1, hauteur), (q3, hauteur)], **options)
+        self.drawLine([(q1, hauteur + epaisseur),
+                       (q3, hauteur + epaisseur)], **options)
+        self.drawLine([(mediane, hauteur),
+                       (mediane, hauteur + epaisseur)], **options)
+        self.drawLine([(q3, hauteur),
+                       (q3, hauteur + epaisseur)], **options)
+        self.drawLine([(q3, miH), (maxi, miH)], **options)
+        self.drawLine([(maxi, hauteur),
+                       (maxi, hauteur + epaisseur)], **options)

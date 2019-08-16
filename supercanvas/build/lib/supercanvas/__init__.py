@@ -3,7 +3,7 @@ from .supercanvas import *
 
 if __name__ == '__main__':
 
-    example = 15
+    example = 18
     
     ######################################################
     ######################################################
@@ -814,4 +814,30 @@ if __name__ == '__main__':
             c.after(100)
 
         
+        endMagicTk(w)
+        
+    ######################################################
+    ######################################################
+    #######  EXAMPLE 18
+    ######################################################
+    ######################################################
+    ######################################################
+
+    elif example == 18:
+        import random
+        w = beginMagicTk()
+        dim = 800
+        c = supercanvas(w, bg="white", width=dim, height=dim//8)
+        c.setView(-1, 21, -1, 4)
+        c.pack(expand=True)
+        for i in range(20):
+            c.drawBoxPlot([random.normalvariate(10, 2.5) for i in range(100)],
+                          fill="red", width=5,
+                          epaisseur=1+random.random()*1, hauteur=1,
+                          capstyle="round")
+            c.update()
+            c.after(100)
+            c.export()
+            c.delete("supercanvas")
+
         endMagicTk(w)
