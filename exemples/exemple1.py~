@@ -1,7 +1,0 @@
-from supercanvas import *
-
-w = beginMagicTk()
-
-c = supercanavs(w, bg="white")
-
-endMagicTk()
